@@ -1,24 +1,9 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a simple appointment system with some features of calendly.com, strip integration and sidekiq implementation on Rails 7.0.4
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+You can set it up on local host or a server by simply 
+* cloning/downloading the codebase,
+* edit the database.yml file with your credentials
+* Run bundle and run migration
+* Run bin/dev and you are live
