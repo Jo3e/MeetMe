@@ -7,6 +7,11 @@
     </div>
 
     <div class="mb-6">
+      <%= f.label :booking_link, class: label_class %>
+        <%= f.text_field :booking_link, class: input_class %>
+    </div>
+
+    <div class="mb-6">
       <%= f.label :password, class: label_class %>
       <%= f.password_field :password, autocomplete: "current-password", class: input_class %>
     </div>
