@@ -1,11 +1,6 @@
 class BookingsController < ApplicationController
   before_action :set_booking, only: %i[ show edit update destroy ]
 
-  # GET /bookings or /bookings.json
-  def index
-    @bookings = Booking.all
-  end
-
   # GET /bookings/1 or /bookings/1.json
   def show
   end
@@ -25,7 +20,7 @@ class BookingsController < ApplicationController
 
     respond_to do |format|
       if @booking.save
-        format.html { redirect_to booking_url(@booking), notice: "Booking was successfully created." }
+        format.html { redirect_to root_path, notice: "Booking was successfully created." }
         format.json { render :show, status: :created, location: @booking }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -65,6 +60,6 @@ class BookingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def booking_params
-      params.require(:booking).permit(:status, :first_name, :last_name, :email, :start_at, :end_at)
+      params.require(:booking).permit(:booking_type_id, :status, :first_name, :last_name, :email, :start_at, :end_at, :notes)
     end
 end
