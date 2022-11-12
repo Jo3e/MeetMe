@@ -8,6 +8,7 @@ class BookingsController < ApplicationController
   # GET /bookings/new
   def new
     @booking = Booking.new
+    @booking_type = BookingType.find_by(name: params[:booking_type])
   end
 
   # GET /bookings/1/edit
@@ -17,14 +18,13 @@ class BookingsController < ApplicationController
   # POST /bookings or /bookings.json
   def create
     @booking = Booking.new(booking_params)
+    @booking_type = BookingType.find(params[:booking][:booking_type_id])
 
     respond_to do |format|
       if @booking.save
         format.html { redirect_to root_path, notice: "Booking was successfully created." }
-        format.json { render :show, status: :created, location: @booking }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @booking.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -34,10 +34,8 @@ class BookingsController < ApplicationController
     respond_to do |format|
       if @booking.update(booking_params)
         format.html { redirect_to booking_url(@booking), notice: "Booking was successfully updated." }
-        format.json { render :show, status: :ok, location: @booking }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @booking.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -48,7 +46,6 @@ class BookingsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to bookings_url, notice: "Booking was successfully destroyed." }
-      format.json { head :no_content }
     end
   end
 
@@ -60,6 +57,6 @@ class BookingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def booking_params
-      params.require(:booking).permit(:booking_type_id, :status, :first_name, :last_name, :email, :start_at, :end_at, :notes)
+      params.require(:booking).permit(:booking_type_id, :status, :name, :email, :start_at, :end_at, :notes)
     end
 end

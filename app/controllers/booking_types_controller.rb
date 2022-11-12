@@ -21,15 +21,13 @@ class BookingTypesController < ApplicationController
 
   # POST /booking_types or /booking_types.json
   def create
-    @booking_type = current_user.booking_types.new(booking_type_params.merge(user: current_user))
+    @booking_type = current_user.booking_types.new(booking_type_params)
 
     respond_to do |format|
       if @booking_type.save
         format.html { redirect_to root_path, notice: "Booking type was successfully created." }
-        format.json { render :show, status: :created, location: @booking_type }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @booking_type.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -39,10 +37,8 @@ class BookingTypesController < ApplicationController
     respond_to do |format|
       if @booking_type.update(booking_type_params)
         format.html { redirect_to booking_type_url(@booking_type), notice: "Booking type was successfully updated." }
-        format.json { render :show, status: :ok, location: @booking_type }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @booking_type.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -53,7 +49,6 @@ class BookingTypesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to root_path, notice: "Booking type was successfully destroyed." }
-      format.json { head :no_content }
     end
   end
 

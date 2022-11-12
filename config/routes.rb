@@ -1,11 +1,10 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  
+
     authenticate :user, lambda { |u| u.admin? } do
       mount Sidekiq::Web => '/sidekiq'
     end
-
 
   devise_for :users
 
@@ -14,10 +13,16 @@ Rails.application.routes.draw do
   end
 
   resources :booking_types
-  resources :bookings, except: %i[index]
+  resources :bookings, except: [:index, :new]
 
-  get ":booking_link", to: "user#show", as: :user
+  post "payment-intent", to: "bookings#intent"
+  get ":booking_link", to: "users#show", as: :user
 
-  root to: 'home#index'
+  scope '/:booking_link', as: :user do
+    resources :bookings, only: [:index, :new]
+  end
 
+  resources :webhooks, only: :create
+
+  root to: "home#index"
 end
