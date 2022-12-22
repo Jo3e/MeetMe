@@ -22,6 +22,11 @@ class BookingsController < ApplicationController
 
     respond_to do |format|
       if @booking.save
+
+        unless @booking_type.payment_required?
+          @booking.approved!
+        end
+
         format.html { redirect_to root_path, notice: "Booking was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -33,7 +38,7 @@ class BookingsController < ApplicationController
   def update
     respond_to do |format|
       if @booking.update(booking_params)
-        format.html { redirect_to booking_url(@booking), notice: "Booking was successfully updated." }
+        format.html { redirect_to root_path, notice: "Booking was successfully updated." }
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -46,6 +51,27 @@ class BookingsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to bookings_url, notice: "Booking was successfully destroyed." }
+    end
+  end
+
+  def intent
+    @booking_type = BookingType.find(params[:_json])
+    amount = @booking_type.price * 100 # conveerted to cents
+
+    payment_intent = Stripe::PaymentIntent.create(
+      amount: amount,
+      currency: "usd",
+      automatic_payment_methods: {
+        enabled: true
+      },
+      metadata: {
+        user_id: @booking_type.user.id,
+        booking_type_id: @booking_type.id
+      }
+    )
+
+    respond_to do |format|
+      format.json { render json: { clientSecret: payment_intent['client_secret'] } }
     end
   end
 
